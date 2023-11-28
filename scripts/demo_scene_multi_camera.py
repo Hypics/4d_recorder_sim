@@ -7,7 +7,6 @@ is_recording = False
 
 from carb import log_warn
 from carb.input import acquire_input_interface, KeyboardEventType
-from omni.isaac.core import World
 from omni.isaac.core.utils import extensions, rotations
 from omni.isaac.sensor import Camera
 from omni.appwindow import get_default_app_window
@@ -110,53 +109,58 @@ if __name__ == "__main__":
         get_default_app_window().get_keyboard(), sub_keyboard_event
     )
 
-    camera_count = 1
+    max_camera_plane = 6 # 6*3 = 18
+    distance = 300.0
     rgb_annot_list = []
-    for idx in range(0, camera_count):
-        distance = 300.0
-        height = 200.0
-        pitch_angle = -np.arctan2(height, distance) / np.pi * 180.0
-        azimuth_angle = idx * 360.0 / camera_count
-        # camera = create_camera(
-        #     index=idx,
-        #     width=3840,
-        #     height=2160,
-        #     position=[
-        #         distance * np.sin(azimuth_angle / 180.0 * np.pi),
-        #         height,
-        #         distance * np.cos(azimuth_angle / 180.0 * np.pi),
-        #     ],
-        #     orientation=[pitch_angle, azimuth_angle, 0],
-        # )
-        camera = rep.create.camera(
-            position=(
-                distance * np.sin(azimuth_angle / 180.0 * np.pi),
-                height,
-                distance * np.cos(azimuth_angle / 180.0 * np.pi),
-            ),
-            look_at=(0, 0, 0),
-            focal_length=20.0,
-        )
-        render_product = rep.create.render_product(camera, resolution=(3840, 2160))
-        # render_product = rep.create.render_product(camera, resolution=(2704, 1520))
-        # render_product = rep.create.render_product(camera, resolution=(1080, 720))
-        rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
-        rgb_annot.attach([render_product])
 
-        rgb_annot_list.append(rgb_annot)
+    camera_idx = 0
+    height_list = [100.0, 200.0, 300.0]
+    for height in height_list:
+        for idx in range(0, max_camera_plane):
+            pitch_angle = -np.arctan2(height, distance) / np.pi * 180.0
+            azimuth_angle = camera_idx * 360.0 / max_camera_plane
+            camera = rep.create.camera(
+                position=(
+                    distance * np.sin(azimuth_angle / 180.0 * np.pi),
+                    height,
+                    distance * np.cos(azimuth_angle / 180.0 * np.pi),
+                ),
+                look_at=(0, 0, 0),
+                focal_length=20.0,
+            )
+            # render_product = rep.create.render_product(camera, resolution=(3840, 2160))
+            # render_product = rep.create.render_product(camera, resolution=(2704, 1520))
+            render_product = rep.create.render_product(camera, resolution=(1080, 720))
+            rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
+            rgb_annot.attach([render_product])
+            rgb_annot_list.append(rgb_annot)
+
+            camera_idx += 1
 
     data_dir = "data/" + datetime.now().strftime("%y%m%d_%H%M%S")
     for idx, rgb_annot in enumerate(rgb_annot_list):
         os.makedirs(data_dir + "/cam" + str(idx).zfill(2) + "/images", exist_ok=True)
 
     image_count = 0
+    record_seconds = 1
+    record_fps = 60
     while simulation_app.is_running():
         simulation_app.update()
 
         if is_recording:
+            if image_count >= record_seconds * record_fps:
+                is_recording = False
+                log_warn("[R] Stop Recording!!")
+
             for idx, rgb_annot in enumerate(rgb_annot_list):
+                rgb_data = None
+                while True:
+                    rgb_data = rgb_annot.get_data()
+                    if rgb_data.size > 0:
+                        break
+
                 write_rgb_data(
-                    rgb_annot.get_data(),
+                    rgb_data,
                     data_dir
                     + "/cam"
                     + str(idx).zfill(2)
@@ -164,6 +168,6 @@ if __name__ == "__main__":
                     + str(image_count).zfill(4),
                 )
             image_count += 1
-            time.sleep(0.01)
+            time.sleep(0.001)
 
     simulation_app.close()
