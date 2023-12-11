@@ -18,6 +18,10 @@ import numpy as np
 from PIL import Image
 import time
 
+# CAMERA_RESOLUTION = (3840, 2160)
+# CAMERA_RESOLUTION = (2704, 1520)
+CAMERA_RESOLUTION = (1080, 720)
+
 
 def write_rgb_data(rgb_data, file_path):
     rgb_image_data = np.frombuffer(rgb_data, dtype=np.uint8).reshape(
@@ -109,33 +113,57 @@ if __name__ == "__main__":
         get_default_app_window().get_keyboard(), sub_keyboard_event
     )
 
-    max_camera_plane = 6 # 6*3 = 18
-    distance = 300.0
     rgb_annot_list = []
 
-    camera_idx = 0
-    height_list = [100.0, 200.0, 300.0]
-    for height in height_list:
-        for idx in range(0, max_camera_plane):
-            pitch_angle = -np.arctan2(height, distance) / np.pi * 180.0
-            azimuth_angle = camera_idx * 360.0 / max_camera_plane
-            camera = rep.create.camera(
-                position=(
-                    distance * np.sin(azimuth_angle / 180.0 * np.pi),
-                    height,
-                    distance * np.cos(azimuth_angle / 180.0 * np.pi),
-                ),
-                look_at=(0, 0, 0),
-                focal_length=20.0,
-            )
-            # render_product = rep.create.render_product(camera, resolution=(3840, 2160))
-            # render_product = rep.create.render_product(camera, resolution=(2704, 1520))
-            render_product = rep.create.render_product(camera, resolution=(1080, 720))
-            rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
-            rgb_annot.attach([render_product])
-            rgb_annot_list.append(rgb_annot)
+    # wall (bottom, top)
+    max_camera_plane = 2 # 6*2 = 12
+    distance = 300.0
 
-            camera_idx += 1
+    camera_idx = 0
+    height_list = [10.0, 300.0]
+    for idx in range(0, max_camera_plane * len(height_list)):
+        pitch_angle = -np.arctan2(height_list[idx % len(height_list)], distance) / np.pi * 180.0
+        azimuth_angle = camera_idx * 360.0 / max_camera_plane * len(height_list)
+        camera = rep.create.camera(
+            position=(
+                distance * np.sin(azimuth_angle / 180.0 * np.pi),
+                height_list[idx % len(height_list)],
+                distance * np.cos(azimuth_angle / 180.0 * np.pi),
+            ),
+            look_at=(0, 0, 0),
+            focal_length=20.0,
+        )
+        render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
+        rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
+        rgb_annot.attach([render_product])
+        rgb_annot_list.append(rgb_annot)
+
+        camera_idx += 1
+
+    # ceiling
+    max_camera_plane = int(max_camera_plane*0.5) # (6*0.5) = 3
+    distance *= 2.0/3.0
+
+    camera_idx = 0
+    height = height_list[-1]
+    for idx in range(0, int(max_camera_plane/2.0)):
+        pitch_angle = -np.arctan2(height, distance) / np.pi * 180.0
+        azimuth_angle = camera_idx * 360.0 / max_camera_plane
+        camera = rep.create.camera(
+            position=(
+                distance * np.sin(azimuth_angle / 180.0 * np.pi),
+                height,
+                distance * np.cos(azimuth_angle / 180.0 * np.pi),
+            ),
+            look_at=(0, 0, 0),
+            focal_length=20.0,
+        )
+        render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
+        rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
+        rgb_annot.attach([render_product])
+        rgb_annot_list.append(rgb_annot)
+
+        camera_idx += 1
 
     data_dir = "data/" + datetime.now().strftime("%y%m%d_%H%M%S")
     for idx, rgb_annot in enumerate(rgb_annot_list):
