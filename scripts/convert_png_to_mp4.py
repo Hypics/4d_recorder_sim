@@ -1,9 +1,7 @@
 import os
 import sys
-import cv2
-from tqdm import tqdm
 
-from utils import *
+from video_util import *
 
 if __name__ == "__main__":
     # input value

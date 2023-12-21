@@ -23,7 +23,8 @@ from datetime import datetime
 import numpy as np
 import time
 
-from utils import *
+from omni_util import *
+from video_util import *
 
 # CAMERA_RESOLUTION = (3840, 2160)
 # CAMERA_RESOLUTION = (2704, 1520)
