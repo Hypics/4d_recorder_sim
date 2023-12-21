@@ -12,4 +12,4 @@ if __name__ == "__main__":
     else:
         dataset_path = "data/isaac_sim/Collisiongroups_C9H3_661"
 
-    convert_png_to_mp4(dataset_path=dataset_path)
+    convert_png_to_mp4(dataset_path=dataset_path, remove_image=False)
