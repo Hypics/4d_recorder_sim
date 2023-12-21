@@ -22,8 +22,9 @@ import os
 from datetime import datetime
 import time
 
-from omni_util import *
-from video_util import *
+sys.path.append(".")
+from utils.omni_utils import *
+from utils.video_utils import *
 
 # CAMERA_RESOLUTION = (3840, 2160)
 # CAMERA_RESOLUTION = (2704, 1520)

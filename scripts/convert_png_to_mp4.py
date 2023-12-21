@@ -1,6 +1,7 @@
 import sys
 
-from video_util import *
+sys.path.append(".")
+from utils.video_utils import *
 
 if __name__ == "__main__":
     # input value

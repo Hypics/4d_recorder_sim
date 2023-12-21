@@ -90,3 +90,9 @@ python scripts/rectangle_camera_set.py usd/demo/ParticleInflatableDemo.usd
 ```bash
 python scripts/convert_png_to_mp4.py data/isaac_sim/Collisiongroups_C9H3_661
 ```
+
+### Upload dataset
+
+```bash
+python scripts/upload_dataset.py isaac_sim Collisiongroups_C9H3_661
+```
