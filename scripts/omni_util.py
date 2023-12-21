@@ -1,6 +1,9 @@
 import numpy as np
 from PIL import Image
 
+from omni.isaac.sensor import Camera
+from omni.isaac.core.utils import rotations
+
 
 def write_rgb_data(rgb_data, file_path):
     rgb_image_data = np.frombuffer(rgb_data, dtype=np.uint8).reshape(
@@ -16,7 +19,7 @@ def create_camera(
     height: int,
     position: list,
     orientation: list,
-) -> omni.isaac.sensor.Camera:
+) -> Camera:
     rotation_matrix_coordinates = [
         [0.0, -1.0, 0.0],
         [0.0, 0.0, 1.0],
@@ -28,7 +31,7 @@ def create_camera(
     print()
 
     print("=====target(XYZ)=====")
-    rotation_matrix_target = omni.isaac.core.utils.rotations.euler_to_rot_matrix(
+    rotation_matrix_target = rotations.euler_to_rot_matrix(
         orientation, degrees=True, extrinsic=False
     )
     rotation_matrix_target = rotation_matrix_target.T
@@ -37,18 +40,18 @@ def create_camera(
     rotation_matrix_target[2][0] *= -1
     rotation_matrix_target[2][1] *= -1
     print(rotation_matrix_target)
-    print(omni.isaac.core.utils.rotations.matrix_to_euler_angles(rotation_matrix_target) / np.pi * 180.0)
+    print(rotations.matrix_to_euler_angles(rotation_matrix_target) / np.pi * 180.0)
     print()
 
     print("=====isaac=====")
     rotation_matrix_isaac = rotation_matrix_target @ rotation_matrix_coordinates
     print(rotation_matrix_isaac)
-    print(omni.isaac.core.utils.rotations.matrix_to_euler_angles(rotation_matrix_isaac) / np.pi * 180.0)
-    orientation_isaac = omni.isaac.core.utils.rotations.rot_matrix_to_quat(rotation_matrix_isaac)
+    print(rotations.matrix_to_euler_angles(rotation_matrix_isaac) / np.pi * 180.0)
+    orientation_isaac = rotations.rot_matrix_to_quat(rotation_matrix_isaac)
     print(orientation_isaac)
     print()
 
-    camera = omni.isaac.sensor.Camera(
+    camera = Camera(
         prim_path="/World/Camera" + str(index),
         name="Camera" + str(index),
         position=np.array(position),
