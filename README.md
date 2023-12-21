@@ -60,3 +60,15 @@
 ```bash
 python scripts/demo_scene_multi_camera.py
 ```
+
+### Make dataset
+
+- Camera cylinder set
+```bash
+./scripts/make_dataset.sh  cylinder
+```
+
+- Camera rectangle set
+```bash
+./scripts/make_dataset.sh  rectangle
+```

@@ -1,6 +1,12 @@
 from omni.isaac.kit import SimulationApp
 
-ENV_URL = "usd/demo/ParticleInflatableDemo.usd"
+# input value
+import sys
+if len(sys.argv) > 1:
+    ENV_URL = sys.argv[1]
+else:
+    ENV_URL = "usd/demo/ParticleInflatableDemo.usd"
+
 CONFIG = {"headless": False, "width": 1920, "height": 1080, "open_usd": ENV_URL}
 simulation_app = SimulationApp(launch_config=CONFIG)
 is_recording = False
