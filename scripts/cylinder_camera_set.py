@@ -12,6 +12,7 @@ simulation_app = SimulationApp(launch_config=CONFIG)
 is_recording = False
 
 from carb import log_warn
+from carb.input import KeyboardEventType
 from carb.input import acquire_input_interface
 from omni.isaac.core.utils import extensions
 from omni.appwindow import get_default_app_window
@@ -157,3 +158,5 @@ if __name__ == "__main__":
             time.sleep(0.001)
 
     simulation_app.close()
+
+    convert_png_to_mp4(dataset_path=data_dir, remove_image=False)

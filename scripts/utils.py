@@ -1,8 +1,9 @@
+import os
 import numpy as np
+import cv2
 from PIL import Image
+from tqdm import tqdm
 
-from carb import log_warn
-from carb.input import KeyboardEventType
 from omni.isaac.core.utils import rotations
 from omni.isaac.sensor import Camera
 
@@ -66,3 +67,36 @@ def create_camera(
     camera.set_focal_length(focal_length / 10.0)
 
     return camera
+
+
+def convert_png_to_mp4(dataset_path: str, remove_image: bool = False):
+    cam_list = sorted(os.listdir(dataset_path))
+    pbar = tqdm(cam_list)
+    for cam_folder_name in pbar:
+        pbar.set_description(f"cam: {cam_folder_name}")
+        cam_folder_path = os.path.join(dataset_path, cam_folder_name)
+        img_folder_path = os.path.join(cam_folder_path, "images")
+
+        fps = 60
+        frame_array = []
+        size = None
+
+        img_list = sorted(os.listdir(img_folder_path))
+        pbar2 = tqdm(img_list, leave=False)
+        for img_name in pbar2:
+            pbar2.set_description(f"img name: {img_name}, size: {size}")
+            img = cv2.imread(os.path.join(img_folder_path, img_name))
+            if size is None:
+                height, width, layers = img.shape
+                size = (width, height)
+            frame_array.append(img)
+
+        out = cv2.VideoWriter(
+            cam_folder_path + ".mp4", cv2.VideoWriter_fourcc(*"FMP4"), fps, size
+        )
+        for frame in frame_array:
+            out.write(frame)
+        out.release()
+
+        if remove_image:
+            os.remove(cam_folder_path)

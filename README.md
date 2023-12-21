@@ -37,7 +37,9 @@
     conda create -n sim python=3.10 \
       && conda activate sim \
       && cp -r conda_setup/etc $CONDA_PREFIX \
-      && conda activate sim
+      && conda activate sim \
+      && conda install tqdm \
+      && pip install opencv-python
     ```
 
 5. Verification
