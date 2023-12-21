@@ -66,11 +66,19 @@ python scripts/demo_scene_multi_camera.py
 ### Make dataset
 
 - Camera cylinder set
+
 ```bash
 ./scripts/make_dataset.sh  cylinder
 ```
 
 - Camera rectangle set
+
 ```bash
 ./scripts/make_dataset.sh  rectangle
+```
+
+### Convert png to mp4
+
+```bash
+python scripts/convert_png_to_mp4.py Collisiongroups_C9H3_661
 ```

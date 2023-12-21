@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
+    "Collisiongroups",
     "DMAR",
     "extscache",
     "IOMMU",
     "ISAACSIM",
     "libfuse",
-    "omni"
+    "omni",
+    "tqdm"
   ]
 }
