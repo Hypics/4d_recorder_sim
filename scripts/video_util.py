@@ -1,5 +1,6 @@
 import os
 import cv2
+import shutil
 from tqdm import tqdm
 
 
@@ -33,4 +34,5 @@ def convert_png_to_mp4(dataset_path: str, remove_image: bool = False):
         out.release()
 
         if remove_image:
-            os.remove(cam_folder_path)
+            print(f"[convert_png_to_mp4] Remove {cam_folder_path}")
+            shutil.rmtree(cam_folder_path)

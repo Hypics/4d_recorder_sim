@@ -133,4 +133,4 @@ if __name__ == "__main__":
 
     simulation_app.close()
 
-    convert_png_to_mp4(dataset_path=data_dir, remove_image=False)
+    convert_png_to_mp4(dataset_path=data_dir, remove_image=True)

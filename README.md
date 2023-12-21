@@ -59,8 +59,16 @@
 
 ### Particle Inflatable Demo
 
+- Camera cylinder set
+
 ```bash
-python scripts/demo_scene_multi_camera.py
+python scripts/cylinder_camera_set.py usd/demo/ParticleInflatableDemo.usd
+```
+
+- Camera rectangle set
+
+```bash
+python scripts/rectangle_camera_set.py usd/demo/ParticleInflatableDemo.usd
 ```
 
 ### Make dataset
@@ -80,5 +88,5 @@ python scripts/demo_scene_multi_camera.py
 ### Convert png to mp4
 
 ```bash
-python scripts/convert_png_to_mp4.py Collisiongroups_C9H3_661
+python scripts/convert_png_to_mp4.py data/isaac_sim/Collisiongroups_C9H3_661
 ```

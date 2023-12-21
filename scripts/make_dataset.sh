@@ -13,6 +13,6 @@ usd_list="Collisiongroups Force KinematicBody MultipleScenes PaintBallEmitter Pa
 for usd in $usd_list
 do
   echo "make dataset ${camera_pose_type} usd/demo/${usd}.usd"
-  python "scripts/${camera_pose_type}_camera_set.py" $usd
+  python "scripts/${camera_pose_type}_camera_set.py usd/demo/${usd}.usd"
   wait
 done

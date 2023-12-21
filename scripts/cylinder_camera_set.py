@@ -26,9 +26,9 @@ import time
 from omni_util import *
 from video_util import *
 
-# CAMERA_RESOLUTION = (3840, 2160)
+CAMERA_RESOLUTION = (3840, 2160)
 # CAMERA_RESOLUTION = (2704, 1520)
-CAMERA_RESOLUTION = (1080, 720)
+# CAMERA_RESOLUTION = (1080, 720)
 
 
 def sub_keyboard_event(event, *args, **kwargs) -> None:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     rgb_annot_list = []
 
     # wall (bottom, top)
-    max_camera_wall = 2 # 6*2 = 12
+    max_camera_wall = 6 # 6*2 = 12
     distance = 450.0
 
     camera_idx = 0
@@ -128,7 +128,7 @@ if __name__ == "__main__":
         os.makedirs(data_dir + "/cam" + str(idx).zfill(2) + "/images", exist_ok=True)
 
     image_count = 0
-    record_seconds = 1
+    record_seconds = 10
     record_fps = 60
     while simulation_app.is_running():
         simulation_app.update()
@@ -160,4 +160,4 @@ if __name__ == "__main__":
 
     simulation_app.close()
 
-    convert_png_to_mp4(dataset_path=data_dir, remove_image=False)
+    convert_png_to_mp4(dataset_path=data_dir, remove_image=True)
