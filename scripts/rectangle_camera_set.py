@@ -114,7 +114,6 @@ if __name__ == "__main__":
             if image_count >= record_seconds * record_fps:
                 is_recording = False
                 log_warn("[R] Stop Recording!!")
-                convert_png_to_mp4(dataset_path=data_dir, remove_image=True)
                 simulation_app.close()
 
             for idx, rgb_annot in enumerate(rgb_annot_list):

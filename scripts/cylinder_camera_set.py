@@ -67,10 +67,9 @@ if __name__ == "__main__":
     max_camera_wall = 6 # 6*2 = 12
     distance = 450.0
 
-    camera_idx = 0
     height_list = [-70.0, 230.0]
     for idx in range(0, max_camera_wall * len(height_list)):
-        azimuth_angle = camera_idx * 360.0 / (max_camera_wall * len(height_list))
+        azimuth_angle = idx * 360.0 / (max_camera_wall * len(height_list))
         camera = rep.create.camera(
             position=(
                 distance * np.sin(azimuth_angle / 180.0 * np.pi),
@@ -85,16 +84,13 @@ if __name__ == "__main__":
         rgb_annot.attach([render_product])
         rgb_annot_list.append(rgb_annot)
 
-        camera_idx += 1
-
     # ceiling (circle)
     # max_camera_ceiling = int(max_camera_wall*0.5) # (6*0.5) = 3
     # distance *= 2.0/3.0
 
-    # camera_idx = 0
     # height = height_list[-1]
     # for idx in range(0, int(max_camera_ceiling/2.0)):
-    #     azimuth_angle = camera_idx * 360.0 / max_camera_ceiling
+    #     azimuth_angle = idx * 360.0 / max_camera_ceiling
     #     camera = rep.create.camera(
     #         position=(
     #             distance * np.sin(azimuth_angle / 180.0 * np.pi),
@@ -108,8 +104,6 @@ if __name__ == "__main__":
     #     rgb_annot = rep.AnnotatorRegistry.get_annotator("rgb")
     #     rgb_annot.attach([render_product])
     #     rgb_annot_list.append(rgb_annot)
-
-    #     camera_idx += 1
 
     # ceiling (center)
     height = height_list[-1]
@@ -139,7 +133,6 @@ if __name__ == "__main__":
             if image_count >= record_seconds * record_fps:
                 is_recording = False
                 log_warn("[R] Stop Recording!!")
-                convert_png_to_mp4(dataset_path=data_dir, remove_image=True)
                 simulation_app.close()
 
             for idx, rgb_annot in enumerate(rgb_annot_list):
