@@ -26,9 +26,9 @@ sys.path.append(".")
 from utils.omni_utils import *
 from utils.video_utils import *
 
-# CAMERA_RESOLUTION = (3840, 2160)
+CAMERA_RESOLUTION = (3840, 2160)
 # CAMERA_RESOLUTION = (2704, 1520)
-CAMERA_RESOLUTION = (1080, 720)
+# CAMERA_RESOLUTION = (1080, 720)
 
 
 def sub_keyboard_event(event, *args, **kwargs) -> None:
@@ -104,15 +104,18 @@ if __name__ == "__main__":
         os.makedirs(data_dir + "/cam" + str(idx).zfill(2) + "/images", exist_ok=True)
 
     image_count = 0
-    record_seconds = 1
+    record_seconds = 10
     record_fps = 60
     while simulation_app.is_running():
         simulation_app.update()
 
         if is_recording:
+            log_warn(f"[R] image_count: {image_count}")
             if image_count >= record_seconds * record_fps:
                 is_recording = False
                 log_warn("[R] Stop Recording!!")
+                convert_png_to_mp4(dataset_path=data_dir, remove_image=True)
+                simulation_app.close()
 
             for idx, rgb_annot in enumerate(rgb_annot_list):
                 rgb_data = None
@@ -133,5 +136,3 @@ if __name__ == "__main__":
             time.sleep(0.001)
 
     simulation_app.close()
-
-    convert_png_to_mp4(dataset_path=data_dir, remove_image=True)
