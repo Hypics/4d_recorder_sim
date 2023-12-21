@@ -23,6 +23,27 @@ from utils import *
 CAMERA_RESOLUTION = (1080, 720)
 
 
+def sub_keyboard_event(event, *args, **kwargs) -> None:
+    global is_recording
+
+    if (
+        event.type == KeyboardEventType.KEY_PRESS
+        or event.type == KeyboardEventType.KEY_REPEAT
+    ):
+        if event.input.name == "R":
+            # print("Pressed: R")
+            is_recording = ~is_recording
+            if is_recording:
+                log_warn("[R] Start Recording!!")
+            else:
+                log_warn("[R] Stop Recording!!")
+    # elif event.type == KeyboardEventType.KEY_RELEASE:
+    #     if event.input.name == "R":
+    #         print("Released: R")
+
+    return True
+
+
 if __name__ == "__main__":
     if CONFIG["headless"] is True:
         extensions.enable_extension("omni.kit.livestream.native")
@@ -38,16 +59,16 @@ if __name__ == "__main__":
     distance = 450.0
 
     camera_idx = 0
-    height_list = [0.0, 300.0]
+    height_list = [-70.0, 230.0]
     for idx in range(0, max_camera_wall * len(height_list)):
-        azimuth_angle = camera_idx * 360.0 / max_camera_wall * len(height_list)
+        azimuth_angle = camera_idx * 360.0 / (max_camera_wall * len(height_list))
         camera = rep.create.camera(
             position=(
                 distance * np.sin(azimuth_angle / 180.0 * np.pi),
                 height_list[idx % len(height_list)],
                 distance * np.cos(azimuth_angle / 180.0 * np.pi),
             ),
-            look_at=(0, 0, 0),
+            look_at=(0, 30, 0),
             focal_length=20.0,
         )
         render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
@@ -85,7 +106,7 @@ if __name__ == "__main__":
     height = height_list[-1]
     camera = rep.create.camera(
         position=(0, height, 0),
-        look_at=(0, 0, 0),
+        look_at=(0, 30, 0),
         focal_length=20.0,
     )
     render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
@@ -94,7 +115,7 @@ if __name__ == "__main__":
     rgb_annot_list.append(rgb_annot)
 
 
-    data_dir = "data/" + datetime.now().strftime("%y%m%d_%H%M%S")
+    data_dir = "data/isaac_sim/" + os.path.splitext(os.path.basename(ENV_URL))[0] + "_" + datetime.now().strftime("%y%m%d_%H%M%S")
     for idx, rgb_annot in enumerate(rgb_annot_list):
         os.makedirs(data_dir + "/cam" + str(idx).zfill(2) + "/images", exist_ok=True)
 
@@ -105,9 +126,11 @@ if __name__ == "__main__":
         simulation_app.update()
 
         if is_recording:
+            log_warn(f"[R] image_count: {image_count}")
             if image_count >= record_seconds * record_fps:
                 is_recording = False
                 log_warn("[R] Stop Recording!!")
+                simulation_app.close()
 
             for idx, rgb_annot in enumerate(rgb_annot_list):
                 rgb_data = None

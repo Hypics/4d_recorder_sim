@@ -23,6 +23,27 @@ from utils import *
 CAMERA_RESOLUTION = (1080, 720)
 
 
+def sub_keyboard_event(event, *args, **kwargs) -> None:
+    global is_recording
+
+    if (
+        event.type == KeyboardEventType.KEY_PRESS
+        or event.type == KeyboardEventType.KEY_REPEAT
+    ):
+        if event.input.name == "R":
+            # print("Pressed: R")
+            is_recording = ~is_recording
+            if is_recording:
+                log_warn("[R] Start Recording!!")
+            else:
+                log_warn("[R] Stop Recording!!")
+    # elif event.type == KeyboardEventType.KEY_RELEASE:
+    #     if event.input.name == "R":
+    #         print("Released: R")
+
+    return True
+
+
 if __name__ == "__main__":
     if CONFIG["headless"] is True:
         extensions.enable_extension("omni.kit.livestream.native")
@@ -70,7 +91,7 @@ if __name__ == "__main__":
                 rgb_annot_list.append(rgb_annot)
 
 
-    data_dir = "data/" + datetime.now().strftime("%y%m%d_%H%M%S")
+    data_dir = "data/isaac_sim/" + os.path.splitext(os.path.basename(ENV_URL))[0] + "_" + datetime.now().strftime("%y%m%d_%H%M%S")
     for idx, rgb_annot in enumerate(rgb_annot_list):
         os.makedirs(data_dir + "/cam" + str(idx).zfill(2) + "/images", exist_ok=True)
 

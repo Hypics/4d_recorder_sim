@@ -15,27 +15,6 @@ def write_rgb_data(rgb_data, file_path):
     rgb_img.save(file_path + ".png")
 
 
-def sub_keyboard_event(event, *args, **kwargs) -> None:
-    global is_recording
-
-    if (
-        event.type == KeyboardEventType.KEY_PRESS
-        or event.type == KeyboardEventType.KEY_REPEAT
-    ):
-        if event.input.name == "R":
-            # print("Pressed: R")
-            is_recording = ~is_recording
-            if is_recording:
-                log_warn("[R] Start Recording!!")
-            else:
-                log_warn("[R] Stop Recording!!")
-    # elif event.type == KeyboardEventType.KEY_RELEASE:
-    #     if event.input.name == "R":
-    #         print("Released: R")
-
-    return True
-
-
 def create_camera(
     index: int,
     width: int,
