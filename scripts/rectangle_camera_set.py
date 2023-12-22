@@ -63,16 +63,16 @@ if __name__ == "__main__":
     rgb_annot_list = []
 
     # wall (bottom, top)
-    poses_width = [-900.0, 0.0, 900.0]
-    poses_depth = [-900.0, 900.0]
-    poses_height = [0.0, 300.0]
+    poses_width = [-300.0, 0.0, 300.0]
+    poses_depth = [-300.0, 300.0]
+    poses_height = [-70.0, 230.0]
 
     for pos_width in poses_width:
         for pos_depth in poses_depth:
             for pos_height in poses_height:
                 camera = rep.create.camera(
-                    position=(pos_depth, pos_height, pos_width),
-                    look_at=(0, 0, 0),
+                    position=(pos_depth, pos_width, poses_height),
+                    look_at=(0, 0, 30),
                     focal_length=20.0,
                 )
                 render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
@@ -81,16 +81,16 @@ if __name__ == "__main__":
                 rgb_annot_list.append(rgb_annot)
 
     # ceiling (center)
-    poses_width = [-450.0, 450.0]
+    poses_width = [-150.0, 150.0]
     poses_depth = [0.0]
-    poses_height = [300.0]
+    poses_height = [230.0]
 
     for pos_width in poses_width:
         for pos_depth in poses_depth:
             for pos_height in poses_height:
                 camera = rep.create.camera(
-                    position=(pos_depth, pos_height, pos_width),
-                    look_at=(0, 0, 0),
+                    position=(pos_depth, pos_width, poses_height),
+                    look_at=(0, 0, 30),
                     focal_length=20.0,
                 )
                 render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)

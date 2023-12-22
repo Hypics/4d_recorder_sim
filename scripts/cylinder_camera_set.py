@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     # wall (bottom, top)
     max_camera_wall = 6 # 6*2 = 12
-    distance = 450.0
+    distance = 300.0
 
     height_list = [-70.0, 230.0]
     for idx in range(0, max_camera_wall * len(height_list)):
@@ -73,10 +73,10 @@ if __name__ == "__main__":
         camera = rep.create.camera(
             position=(
                 distance * np.sin(azimuth_angle / 180.0 * np.pi),
-                height_list[idx % len(height_list)],
                 distance * np.cos(azimuth_angle / 180.0 * np.pi),
+                height_list[idx % len(height_list)],
             ),
-            look_at=(0, 30, 0),
+            look_at=(0, 0, 30),
             focal_length=20.0,
         )
         render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
@@ -108,8 +108,8 @@ if __name__ == "__main__":
     # ceiling (center)
     height = height_list[-1]
     camera = rep.create.camera(
-        position=(0, height, 0),
-        look_at=(0, 30, 0),
+        position=(0, 0, height),
+        look_at=(0, 0, 30),
         focal_length=20.0,
     )
     render_product = rep.create.render_product(camera, resolution=CAMERA_RESOLUTION)
