@@ -13,15 +13,12 @@ if __name__ == "__main__":
     nas_pw = "deeeep"
 
     # input value
-    if len(sys.argv) > 2:
-        user_name = sys.argv[1]
-        dataset_name = sys.argv[2]
+    if len(sys.argv) > 1:
+        user_dataset_path = sys.argv[1]
     else:
-        user_name = "isaac_sim"
-        dataset_name = "Collisiongroups_C9H3_661"
+        user_dataset_path = "data/isaac_sim/Collisiongroups_C9H3_661"
 
-    user_folder_path = f"data/{user_name}"
-    user_dataset_path = f"{user_folder_path}/{dataset_name}"
+    user_folder_path = os.path.dirname(user_dataset_path)
     synology_output_path = f"/dataset/4DGaussians/{user_dataset_path}"
 
     with SynologySession(
