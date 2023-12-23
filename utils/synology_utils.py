@@ -261,5 +261,5 @@ class SynologySession:
                 if r.status_code == 200 and r.json()["success"]:
                     result.append(f"{file_path} Upload Complete")
                 else:
-                    result.append(f"{file_path} Upload Fail", r.status_code, r.json())
+                    result.append(f"{file_path} Upload Fail: {r.status_code} {r.json()}")
         return result
